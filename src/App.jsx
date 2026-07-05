@@ -38,7 +38,7 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import Projects from "./pages/Projects";
 import Footer from "./components/Footer";
-import Contact from "./pages/contact";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -47,10 +47,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/pages/about" element={<About />} />
+        <Route path="/pages/services" element={<Services />} />
+        <Route path="/pages/projects" element={<Projects />} />
+        <Route path="/pages/contact" element={<Contact />} />
       </Routes>
 
       <Footer />
