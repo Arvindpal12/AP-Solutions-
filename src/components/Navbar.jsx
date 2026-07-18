@@ -84,7 +84,7 @@ export default function Navbar() {
             Get Quote
           </motion.button> */}
           <motion.button
-        onClick={() => navigate("/contact")}
+        onClick={() => navigate("/pages/contact")}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="hidden md:block bg-white text-black px-6 py-3 rounded-full font-semibold"

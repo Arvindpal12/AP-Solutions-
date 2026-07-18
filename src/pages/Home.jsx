@@ -1005,7 +1005,7 @@ const Hero = () => {
 
           <div className="flex flex-wrap gap-4 sm:gap-5 mt-8 sm:mt-10">
             <motion.button
-            onClick={() => navigate("/contact")}
+            onClick={() => navigate("/pages/contact")}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold flex items-center gap-3 shadow-xl text-sm sm:text-base"
@@ -1015,7 +1015,7 @@ const Hero = () => {
             </motion.button>
 
             <motion.button
-              onClick={() => navigate("/Projects")}
+              onClick={() => navigate("/pages/Portfolio")}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="border-2 border-gray-300 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold flex items-center gap-3 hover:border-blue-500 text-sm sm:text-base"

@@ -1,5 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import {
   Globe,
   TrendingUp,
@@ -43,6 +45,8 @@ const cards = [
 ];
 
 export default function WhyWebsite() {
+  const navigate = useNavigate();
+
   return (
     <section className="relative overflow-hidden bg-[#f7fbff] py-24 px-6">
       {/* Background Glow */}
@@ -156,6 +160,7 @@ export default function WhyWebsite() {
             </div>
 
             <motion.button
+            onClick={() => navigate("/pages/contact")}
               whileHover={{
                 scale:1.05
               }}

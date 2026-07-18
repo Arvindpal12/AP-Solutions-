@@ -36,7 +36,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
-import Projects from "./pages/Projects";
+import Portfolio from "./pages/Portfolio";
 import Footer from "./components/Footer";
 import Contact from "./pages/Contact";
 
@@ -49,7 +49,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pages/about" element={<About />} />
         <Route path="/pages/services" element={<Services />} />
-        <Route path="/pages/projects" element={<Projects />} />
+        <Route path="/pages/portfolio" element={<Portfolio />} />
         <Route path="/pages/contact" element={<Contact />} />
       </Routes>
 
