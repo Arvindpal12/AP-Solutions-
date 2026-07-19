@@ -2154,7 +2154,7 @@ export default function About() {
     <main>
       <AboutHero />
       <MissionVisionValues />
-      <WhyneedSec />
+      <WhyNeedSec />
       <ServicesOverview />
       <Lang />
       
