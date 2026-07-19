@@ -1307,7 +1307,7 @@ const handleSubmit = async (e) => {
           viewport={{ once: true }}
           className="text-center mb-16 md:mb-20"
         >
-          <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30">
+          <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30 mt-10">
             CONTACT AP SOLUTIONS
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-8">

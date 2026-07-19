@@ -54,7 +54,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   // 'http://localhost:5174',
-  'https://apdigital.netlify.app/' // <-- ISKO APNE REAL NETLIFY URL SE REPLACE KARO
+  'https://apdigital.netlify.app' // <-- ISKO APNE REAL NETLIFY URL SE REPLACE KARO
 ];
 
 app.use(cors({
