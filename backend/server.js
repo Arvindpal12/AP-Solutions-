@@ -53,7 +53,7 @@ const app = express();
 // ✅ Allowed origins — apna actual Netlify URL yahan daalo
 const allowedOrigins = [
   'http://localhost:5173',
-  'http://localhost:5174',
+  // 'http://localhost:5174',
   'https://apdigital.netlify.app/' // <-- ISKO APNE REAL NETLIFY URL SE REPLACE KARO
 ];
 
