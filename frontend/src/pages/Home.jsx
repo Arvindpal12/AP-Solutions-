@@ -853,7 +853,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import image from "../assets/image.jpg";
-import WhyneedSec from "./WhyneedSec";
+import WhyneedSec from "./WhyNeedSec";
 
 import {
   FaSearch,

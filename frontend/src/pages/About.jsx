@@ -1383,7 +1383,7 @@
 // // }
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import WhyneedSec from "./WhyneedSec";
+import WhyneedSec from "./WhyNeedSec";
 import Lang from "./Lang";
 import { motion, useReducedMotion } from "framer-motion";
 import about from "../assets/about.png";
