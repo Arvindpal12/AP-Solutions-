@@ -1213,7 +1213,7 @@ export default function Home() {
     <>
       <Hero />
       <ProcessSection />
-      <WhyneedSec />
+      <WhyNeedSec />
     </>
   );
 }
