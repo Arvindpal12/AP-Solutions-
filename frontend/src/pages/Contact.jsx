@@ -1226,12 +1226,41 @@ function Contactus() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setStatus("");
+  //   try {
+  //     const res = await fetch("http://localhost:5000/api/Contact", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(formData),
+  //     });
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       setStatus("success");
+  //       setFormData({
+  //         name: "",
+  //         email: "",
+  //         phone: "",
+  //         projectType: "",
+  //         message: "",
+  //       });
+  //     } else {
+  //       setStatus("error");
+  //     }
+  //   } catch (err) {
+  //     setStatus("error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setStatus("");
     try {
-      const res = await fetch("http://localhost:5000/api/Contact", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -1255,7 +1284,6 @@ function Contactus() {
       setLoading(false);
     }
   };
-
   return (
     <section className="relative overflow-hidden bg-[#f7fbff] text-black py-20 md:py-28">
       <div className="absolute inset-0 overflow-hidden">
