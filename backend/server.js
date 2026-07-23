@@ -42,6 +42,87 @@
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
+// const express = require('express');
+// const cors = require('cors');
+// require('dotenv').config();
+// const mongoose = require('mongoose');
+
+// const app = express();
+
+// // Sabse Simple aur Working CORS
+// app.use(cors({
+//   origin: '*',           // Sab allow (temporary testing)
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true
+// }));
+
+// app.use(express.json({ limit: '10mb' }));
+
+// mongoose.connect(process.env.MONGO_URI)
+//   .then(() => console.log('✅ MongoDB Connected'))
+//   .catch(err => console.error('❌ MongoDB Error:', err));
+
+// const contactRoutes = require('./routes/contactroutes');
+// app.use('/api', contactRoutes);
+
+// const PORT = process.env.PORT || 10000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+//   console.log('✅ CORS: origin * (All allowed)');
+// });
+
+
+
+// const express = require('express');
+// const cors = require('cors');
+// require('dotenv').config();
+// const mongoose = require('mongoose');
+
+// const app = express();
+
+// // CORS - Sab allow (Temporary - Testing ke liye)
+// app.use(cors({
+//   origin: '*',                    
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true
+// }));
+
+// // Body Parser
+// app.use(express.json({ limit: '10mb' }));
+// app.use(express.urlencoded({ extended: true }));
+
+// // MongoDB Connection
+// mongoose.connect(process.env.MONGO_URI)
+//   .then(() => console.log('✅ MongoDB Connected'))
+//   .catch(err => {
+//     console.error('❌ MongoDB Error:', err);
+//     process.exit(1);
+//   });
+
+// // Routes
+// const contactRoutes = require('./routes/contactroutes');
+// app.use('/api', contactRoutes);
+
+// // 404 Handler
+// app.use((req, res) => {
+//   res.status(404).json({ success: false, message: 'Route not found' });
+// });
+
+// // Global Error Handler
+// app.use((err, req, res, next) => {
+//   console.error('Server Error:', err);
+//   res.status(500).json({ success: false, message: 'Something went wrong' });
+// });
+
+// const PORT = process.env.PORT || 10000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+//   console.log('✅ CORS: origin * (All origins allowed for testing)');
+// });
+
+
 
 const express = require('express');
 const cors = require('cors');
@@ -50,37 +131,22 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// ✅ Allowed origins — apna actual Netlify URL yahan daalo
-const allowedOrigins = [
-  'http://localhost:5173',
-  // 'http://localhost:5174',
-  'https://apdigital.netlify.app' // <-- ISKO APNE REAL NETLIFY URL SE REPLACE KARO
-];
-
+// CORS - Testing ke liye sab allow (credentials false rakha hai kyunki origin '*' hai)
 app.use(cors({
-  origin: function (origin, callback) {
-    // Postman ya server-to-server requests mein origin undefined hota hai, unhe allow karo
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
-    }
-  },
-  credentials: true
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
+// Body Parser
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection check
-if (!process.env.MONGO_URI) {
-  console.error('❌ MONGO_URI not set in .env file');
-  process.exit(1);
-}
-
+// MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => {
+    console.error('❌ MongoDB Error:', err);
     process.exit(1);
   });
 
@@ -88,18 +154,19 @@ mongoose.connect(process.env.MONGO_URI)
 const contactRoutes = require('./routes/contactroutes');
 app.use('/api', contactRoutes);
 
-// 404 handler
+// 404 Handler
 app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+  res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Global error handler
+// Global Error Handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: err.message || 'Something went wrong' });
+  console.error('Server Error:', err);
+  res.status(500).json({ success: false, message: 'Something went wrong' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log('✅ CORS: origin * (All origins allowed for testing)');
 });
