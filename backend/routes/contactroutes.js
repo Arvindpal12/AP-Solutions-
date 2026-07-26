@@ -265,13 +265,14 @@
 
 // module.exports = router;
 
-
 // const express = require("express");
 // const router = express.Router();
 // const Contact = require("../module/Contact");
 // const nodemailer = require("nodemailer");
+// const dns = require("dns");
 
-// // Nodemailer Transporter
+// dns.setDefaultResultOrder("ipv4first");
+
 // const transporter = nodemailer.createTransport({
 //   host: "smtp.gmail.com",
 //   port: 587,
@@ -280,16 +281,20 @@
 //     user: process.env.EMAIL_USER,
 //     pass: process.env.EMAIL_PASS,
 //   },
-//   tls: { rejectUnauthorized: false }
+//   tls: { rejectUnauthorized: false },
+//   family: 4,
+//   connectionTimeout: 10000,
+//   greetingTimeout: 10000,
+//   socketTimeout: 15000,
+//   pool: true,
+//   maxConnections: 3,
 // });
 
-// // Verify SMTP
 // transporter.verify((error) => {
 //   if (error) console.error("❌ SMTP Error:", error);
 //   else console.log("✅ Nodemailer Ready");
 // });
 
-// // POST Route
 // router.post("/Contact", async (req, res) => {
 //   try {
 //     const { name, email, message } = req.body;
@@ -302,46 +307,69 @@
 //     const newContact = new Contact({ name, email, message });
 //     await newContact.save();
 
-//     // Send Thank You Email to User
-//     await transporter.sendMail({
-//       from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
-//       to: email,
-//       subject: "Thank You for Contacting AP Solutions!",
-//       html: `
-//         <h2>Hello ${name},</h2>
-//         <p>Thank you for reaching out. We have received your message.</p>
-//         <p>Our team will contact you soon.</p>
-//         <hr>
-//         <p><strong>Your Message:</strong> ${message}</p>
-//         <p>Best Regards,<br><strong>AP Solutions Team</strong></p>
-//       `
-//     });
-
-//     // Send Notification to Admin
-//     await transporter.sendMail({
-//       from: `"Website Form" <${process.env.EMAIL_USER}>`,
-//       to: process.env.EMAIL_USER,
-//       subject: `📩 New Contact from ${name}`,
-//       html: `
-//         <h2>New Contact Form</h2>
-//         <p><strong>Name:</strong> ${name}</p>
-//         <p><strong>Email:</strong> ${email}</p>
-//         <p><strong>Message:</strong></p>
-//         <p>${message}</p>
-//       `
-//     });
-
-//     return res.status(201).json({
+//     // Client ko turant response
+//     res.status(201).json({
 //       success: true,
-//       message: "Form submitted successfully. Thank you!"
+//       message: "Form submitted successfully. Thank you!",
 //     });
 
+//     // Background emails
+//     setImmediate(() => {
+//       // ✅ USER ko sirf generic Thank You — unka data/message wapas nahi jayega
+//       const userMail = {
+//         from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
+//         to: email,
+//         subject: "Thank You for Contacting AP Solutions!",
+//         html: `
+//           <div style="font-family: Arial, sans-serif; padding: 20px;">
+//             <h2>Hello ${name}, 👋</h2>
+//             <p>Thank you for reaching out to <b>AP Solutions</b>!</p>
+//             <p>We have received your message and our team will get back to you shortly.</p>
+//             <br>
+//             <p>Best regards,</p>
+//             <h3>AP Solutions Team</h3>
+//           </div>
+//         `,
+//       };
+
+//       // ✅ ADMIN ko poora filled data
+//       const adminMail = {
+//         from: `"Website Form" <${process.env.EMAIL_USER}>`,
+//         to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+//         subject: `📩 New Contact from ${name}`,
+//         html: `
+//           <div style="font-family: Arial, sans-serif; padding: 20px;">
+//             <h2>New Contact Form Submission</h2>
+//             <p><strong>Name:</strong> ${name}</p>
+//             <p><strong>Email:</strong> ${email}</p>
+//             <p><strong>Message:</strong></p>
+//             <p>${message}</p>
+//           </div>
+//         `,
+//       };
+
+//       Promise.allSettled([
+//         transporter.sendMail(userMail),
+//         transporter.sendMail(adminMail),
+//       ]).then((results) => {
+//         results.forEach((r, i) => {
+//           const label = i === 0 ? "User mail" : "Admin mail";
+//           if (r.status === "fulfilled") {
+//             console.log(`✅ ${label} sent`);
+//           } else {
+//             console.error(`❌ ${label} failed:`, r.reason.message);
+//           }
+//         });
+//       });
+//     });
 //   } catch (err) {
 //     console.error("❌ Contact Route Error:", err);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Server error. Please try again."
-//     });
+//     if (!res.headersSent) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Server error. Please try again.",
+//       });
+//     }
 //   }
 // });
 
@@ -351,6 +379,10 @@ const express = require("express");
 const router = express.Router();
 const Contact = require("../module/Contact");
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+
+// Force IPv4 lookup globally - fixes ENETUNREACH on Render (IPv6 not routable)
+dns.setDefaultResultOrder("ipv4first");
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -361,7 +393,13 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: { rejectUnauthorized: false }
+  tls: { rejectUnauthorized: false },
+  family: 4,              // 🔑 key fix — skip broken IPv6 route
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
+  pool: true,
+  maxConnections: 3,
 });
 
 // Verify SMTP
@@ -370,37 +408,28 @@ transporter.verify((error) => {
   else console.log("✅ Nodemailer Ready");
 });
 
-// Simple validators (backend-side safety net, even if frontend validates too)
-const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidPhone = (phone) => /^[0-9]{10}$/.test(phone);
-
 // POST Route
 router.post("/Contact", async (req, res) => {
   try {
-    const { name, email, phone, message } = req.body;
+    const { name, email, message } = req.body;
 
-    // Field presence check
-    if (!name || !email || !phone || !message) {
+    if (!name || !email || !message) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    // Format validation
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ success: false, message: "Please enter a valid email address" });
-    }
-
-    if (!isValidPhone(phone)) {
-      return res.status(400).json({ success: false, message: "Please enter a valid 10-digit phone number" });
-    }
-
-    // Save to DB
-    const newContact = new Contact({ name, email, phone, message });
+    // Save to DB first
+    const newContact = new Contact({ name, email, message });
     await newContact.save();
 
-    // Send Thank You Email to User (tracked separately so we know if it fails)
-    let userEmailSent = true;
-    try {
-      await transporter.sendMail({
+    // ⚡ Client ko turant response bhej do — email background me jayega
+    res.status(201).json({
+      success: true,
+      message: "Form submitted successfully. Thank you!",
+    });
+
+    // 🚀 Emails ab background me, non-blocking
+    setImmediate(() => {
+      const userMail = {
         from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Thank You for Contacting AP Solutions!",
@@ -409,21 +438,12 @@ router.post("/Contact", async (req, res) => {
           <p>Thank you for reaching out. We have received your message.</p>
           <p>Our team will contact you soon.</p>
           <hr>
-          <p><strong>Your Phone:</strong> ${phone}</p>
           <p><strong>Your Message:</strong> ${message}</p>
           <p>Best Regards,<br><strong>AP Solutions Team</strong></p>
-        `
-      });
-      console.log(`✅ Thank you email sent to user: ${email}`);
-    } catch (userMailErr) {
-      userEmailSent = false;
-      console.error("❌ Failed to send Thank You email to user:", userMailErr);
-    }
+        `,
+      };
 
-    // Send Notification to Admin (tracked separately too)
-    let adminEmailSent = true;
-    try {
-      await transporter.sendMail({
+      const adminMail = {
         from: `"Website Form" <${process.env.EMAIL_USER}>`,
         to: process.env.EMAIL_USER,
         subject: `📩 New Contact from ${name}`,
@@ -431,30 +451,33 @@ router.post("/Contact", async (req, res) => {
           <h2>New Contact Form</h2>
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Message:</strong></p>
           <p>${message}</p>
-        `
+        `,
+      };
+
+      Promise.allSettled([
+        transporter.sendMail(userMail),
+        transporter.sendMail(adminMail),
+      ]).then((results) => {
+        results.forEach((r, i) => {
+          const label = i === 0 ? "User mail" : "Admin mail";
+          if (r.status === "fulfilled") {
+            console.log(`✅ ${label} sent`);
+          } else {
+            console.error(`❌ ${label} failed:`, r.reason.message);
+          }
+        });
       });
-      console.log(`✅ Admin notification email sent`);
-    } catch (adminMailErr) {
-      adminEmailSent = false;
-      console.error("❌ Failed to send Admin notification email:", adminMailErr);
-    }
-
-    return res.status(201).json({
-      success: true,
-      message: "Form submitted successfully. Thank you!",
-      userEmailSent,
-      adminEmailSent
     });
-
   } catch (err) {
     console.error("❌ Contact Route Error:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Server error. Please try again."
-    });
+    if (!res.headersSent) {
+      return res.status(500).json({
+        success: false,
+        message: "Server error. Please try again.",
+      });
+    }
   }
 });
 

@@ -1169,6 +1169,340 @@
 
 // export default Contactus;
 
+// import React, { useState } from "react";
+// import { motion } from "framer-motion";
+// import { Clock, Send, ArrowRight, Globe } from "lucide-react";
+// import {
+//   FaFacebookF,
+//   FaInstagram,
+//   FaLinkedinIn,
+//   FaWhatsapp,
+//   FaEnvelope,
+//   FaMapMarkerAlt,
+// } from "react-icons/fa";
+
+// // ✅ FIX: contactCards ab ek proper array of objects hai (pehle isme .map()
+// // seedha const declaration ke andar chal raha tha, jo JSX return karta tha
+// // data objects ki jagah — isi wajah se item.icon/title/value undefined aa rahe the)
+// const contactCards = [
+//   {
+//     icon: FaEnvelope,
+//     title: "Email",
+//     value: "mohan0998pal@gmail.com",
+//     link: "mailto:mohan0998pal@gmail.com",
+//   },
+//   {
+//     icon: FaWhatsapp,
+//     title: "WhatsApp",
+//     value: "7398696706",
+//     link: "https://wa.me/917398696706",
+//   },
+//   {
+//     icon: FaMapMarkerAlt,
+//     title: "Location",
+//     value: "Faridabad, Haryana",
+//     link: "https://maps.google.com/?q=Your+Location",
+//   },
+//   {
+//     icon: Clock,
+//     title: "Working Hours",
+//     value: "Mon - Sat : 9AM - 7PM",
+//     link: null,
+//   },
+// ];
+
+// function Contactus() {
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     phone: "",
+//     projectType: "",
+//     message: "",
+//   });
+//   const [status, setStatus] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setStatus("");
+//     try {
+//       const res = await fetch("http://localhost:5000/api/Contact", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(formData),
+//       });
+//       const data = await res.json();
+//       if (res.ok) {
+//         setStatus("success");
+//         setFormData({
+//           name: "",
+//           email: "",
+//           phone: "",
+//           projectType: "",
+//           message: "",
+//         });
+//       } else {
+//         setStatus("error");
+//       }
+//     } catch (err) {
+//       setStatus("error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+// const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setStatus("");
+//     try {
+//       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Contact`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(formData),
+//       });
+//       const data = await res.json();
+//       if (res.ok) {
+//         setStatus("success");
+//         setFormData({
+//           name: "",
+//           email: "",
+//           phone: "",
+//           projectType: "",
+//           message: "",
+//         });
+//       } else {
+//         setStatus("error");
+//       }
+//     } catch (err) {
+//       setStatus("error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+//   return (
+//     <section className="relative overflow-hidden bg-[#f7fbff] text-black py-20 md:py-28">
+//       <div className="absolute inset-0 overflow-hidden">
+//         <motion.div
+//           animate={{ x: [0, 120, 0], y: [0, -120, 0] }}
+//           transition={{ duration: 15, repeat: Infinity }}
+//           className="absolute w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full top-10 left-10"
+//         />
+//         <motion.div
+//           animate={{ x: [0, -150, 0], y: [0, 120, 0] }}
+//           transition={{ duration: 18, repeat: Infinity }}
+//           className="absolute w-96 h-96 bg-[#f7fbff] rounded-full bottom-0 right-0"
+//         />
+//       </div>
+
+//       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+//         <motion.div
+//           initial={{ opacity: 0, y: 80 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.7 }}
+//           viewport={{ once: true }}
+//           className="text-center mb-16 md:mb-20"
+//         >
+//           <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30 mt-10">
+//             CONTACT AP SOLUTIONS
+//           </span>
+//           <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-8">
+//             Let's Build Something Amazing
+//           </h2>
+//           <p className="text-gray-700 mt-6 max-w-3xl mx-auto text-base md:text-lg">
+//             Need a modern website, Shopify store, WordPress website, SEO, or
+//             Digital Marketing? Let's discuss your project.
+//           </p>
+//         </motion.div>
+
+//         <div className="flex flex-col items-center gap-12">
+//           {/* Form */}
+//           <motion.div
+//             initial={{ opacity: 0, x: 80 }}
+//             whileInView={{ opacity: 1, x: 0 }}
+//             transition={{ duration: 0.8 }}
+//             viewport={{ once: true }}
+//             className="relative w-full max-w-2xl mx-auto order-1"
+//           >
+//             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 blur-xl opacity-30 rounded-3xl"></div>
+//             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10">
+//               <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
+//                 Send Message
+//               </h3>
+
+//               <form className="space-y-5" onSubmit={handleSubmit}>
+//                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+//                   <input
+//                     type="text"
+//                     name="name"
+//                     value={formData.name}
+//                     onChange={handleChange}
+//                     placeholder="Your Name"
+//                     required
+//                     className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+//                   />
+//                   <input
+//                     type="email"
+//                     name="email"
+//                     value={formData.email}
+//                     onChange={handleChange}
+//                     placeholder="Email Address"
+//                     required
+//                     className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+//                   />
+//                 </div>
+
+//                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+//                   <input
+//                     type="text"
+//                     name="phone"
+//                     value={formData.phone}
+//                     onChange={handleChange}
+//                     placeholder="Phone Number"
+//                     className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+//                   />
+//                   <input
+//                     type="text"
+//                     name="projectType"
+//                     value={formData.projectType}
+//                     onChange={handleChange}
+//                     placeholder="Project Type"
+//                     className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+//                   />
+//                 </div>
+
+//                 <textarea
+//                   rows="6"
+//                   name="message"
+//                   value={formData.message}
+//                   onChange={handleChange}
+//                   placeholder="Tell us about your project..."
+//                   required
+//                   className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+//                 ></textarea>
+
+//                 <motion.button
+//                   whileHover={{ scale: 1.03 }}
+//                   whileTap={{ scale: 0.95 }}
+//                   type="submit"
+//                   disabled={loading}
+//                   className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-4 sm:py-5 rounded-xl font-bold flex justify-center items-center gap-3 hover:shadow-[0_0_40px_rgba(0,255,255,.4)] transition disabled:opacity-60"
+//                 >
+//                   {loading ? "Sending..." : "Send Message"}
+//                   <Send size={20} />
+//                 </motion.button>
+
+//                 {status === "success" && (
+//                   <p className="text-green-500 text-center font-medium">
+//                     Message sent successfully! We'll get back to you soon.
+//                   </p>
+//                 )}
+//                 {status === "error" && (
+//                   <p className="text-red-500 text-center font-medium">
+//                     Something went wrong. Please try again.
+//                   </p>
+//                 )}
+//               </form>
+//             </div>
+//           </motion.div>
+
+//           {/* Contact Information */}
+//           <motion.div
+//             initial={{ opacity: 0, x: -80 }}
+//             whileInView={{ opacity: 1, x: 0 }}
+//             transition={{ duration: 0.8 }}
+//             viewport={{ once: true }}
+//             className="w-full order-2"
+//           >
+//             <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
+//               Contact Information
+//             </h3>
+
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               {contactCards.map((item, i) => {
+//                 const Icon = item.icon;
+//                 return (
+//                   <motion.div
+//                     whileHover={{ scale: 1.03, x: 6 }}
+//                     key={i}
+//                     onClick={() => item.link && window.open(item.link, "_blank")}
+//                     className={`group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex items-center gap-5 hover:border-cyan-400 transition ${
+//                       item.link ? "cursor-pointer" : ""
+//                     }`}
+//                   >
+//                     <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center group-hover:bg-cyan-500 group-hover:rotate-12 transition">
+//                       <Icon size={26} />
+//                     </div>
+//                     <div>
+//                       <h4 className="font-bold text-lg sm:text-xl">
+//                         {item.title}
+//                       </h4>
+//                       <p className="text-gray-400 text-sm sm:text-base">
+//                         {item.value}
+//                       </p>
+//                     </div>
+//                   </motion.div>
+//                 );
+//               })}
+//             </div>
+//           </motion.div>
+
+//           {/* Social Icons */}
+//           <motion.div
+//             initial={{ opacity: 0, y: 30 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.8 }}
+//             viewport={{ once: true }}
+//             className="flex flex-wrap justify-center gap-5 order-3"
+//           >
+//             {[FaFacebookF, FaInstagram, FaLinkedinIn, Globe].map((Icon, i) => (
+//               <motion.div
+//                 whileHover={{ y: -8, rotate: 8 }}
+//                 key={i}
+//                 className="w-14 h-14 rounded-full bg-white/5 flex justify-center items-center border border-white/10 hover:bg-cyan-500 cursor-pointer transition"
+//               >
+//                 <Icon />
+//               </motion.div>
+//             ))}
+//           </motion.div>
+
+//           {/* Bottom CTA */}
+//           <motion.div
+//             initial={{ opacity: 0, y: 70 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.8 }}
+//             viewport={{ once: true }}
+//             className="w-full order-4 mt-8 md:mt-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[30px] md:rounded-[40px] p-8 md:p-12 flex flex-col lg:flex-row justify-between items-center gap-8"
+//           >
+//             <div>
+//               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center lg:text-left">
+//                 Ready To Grow Your Business?
+//               </h2>
+//               <p className="text-base md:text-lg mt-4 text-white/90 text-center lg:text-left">
+//                 AP SOLUTIONS creates high-performing websites, eCommerce
+//                 stores, and digital marketing solutions that help businesses
+//                 grow online.
+//               </p>
+//             </div>
+//             <motion.button
+//               whileHover={{ x: 8 }}
+//               className="bg-white text-black px-8 py-4 md:px-10 md:py-5 rounded-full font-bold flex items-center gap-3"
+//             >
+//               Start Your Project
+//               <ArrowRight />
+//             </motion.button>
+//           </motion.div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+// export default Contactus;
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Clock, Send, ArrowRight, Globe } from "lucide-react";
@@ -1181,9 +1515,6 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 
-// ✅ FIX: contactCards ab ek proper array of objects hai (pehle isme .map()
-// seedha const declaration ke andar chal raha tha, jo JSX return karta tha
-// data objects ki jagah — isi wajah se item.icon/title/value undefined aa rahe the)
 const contactCards = [
   {
     icon: FaEnvelope,
@@ -1201,7 +1532,7 @@ const contactCards = [
     icon: FaMapMarkerAlt,
     title: "Location",
     value: "Faridabad, Haryana",
-    link: "https://maps.google.com/?q=Your+Location",
+    link: "https://maps.google.com/?q=Faridabad,+Haryana",
   },
   {
     icon: Clock,
@@ -1219,6 +1550,7 @@ function Contactus() {
     projectType: "",
     message: "",
   });
+
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -1226,48 +1558,28 @@ function Contactus() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setStatus("");
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/Contact", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(formData),
-  //     });
-  //     const data = await res.json();
-  //     if (res.ok) {
-  //       setStatus("success");
-  //       setFormData({
-  //         name: "",
-  //         email: "",
-  //         phone: "",
-  //         projectType: "",
-  //         message: "",
-  //       });
-  //     } else {
-  //       setStatus("error");
-  //     }
-  //   } catch (err) {
-  //     setStatus("error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setStatus("");
+
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      if (res.ok) {
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("JSON Parse Error:", err);
+      }
+
+      if (res.ok && data.success) {
         setStatus("success");
+        // Form field clear karein
         setFormData({
           name: "",
           email: "",
@@ -1275,18 +1587,24 @@ const handleSubmit = async (e) => {
           projectType: "",
           message: "",
         });
+
+        // 5 seconds baad success msg ko hide kar dein
+        setTimeout(() => setStatus(""), 5000);
       } else {
         setStatus("error");
       }
     } catch (err) {
+      console.error("❌ Fetch Error:", err);
       setStatus("error");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <section className="relative overflow-hidden bg-[#f7fbff] text-black py-20 md:py-28">
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Background Animated Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ x: [0, 120, 0], y: [0, -120, 0] }}
           transition={{ duration: 15, repeat: Infinity }}
@@ -1295,11 +1613,12 @@ const handleSubmit = async (e) => {
         <motion.div
           animate={{ x: [0, -150, 0], y: [0, 120, 0] }}
           transition={{ duration: 18, repeat: Infinity }}
-          className="absolute w-96 h-96 bg-[#f7fbff] rounded-full bottom-0 right-0"
+          className="absolute w-96 h-96 bg-blue-300/20 blur-[100px] rounded-full bottom-0 right-0"
         />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1307,10 +1626,10 @@ const handleSubmit = async (e) => {
           viewport={{ once: true }}
           className="text-center mb-16 md:mb-20"
         >
-          <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30 mt-10">
-            CONTACT AP SOLUTIONS
+          <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black border border-cyan-500/30 font-semibold text-sm">
+            CONTACT AP DIGITAL SOLUTIONS
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-8">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-6">
             Let's Build Something Amazing
           </h2>
           <p className="text-gray-700 mt-6 max-w-3xl mx-auto text-base md:text-lg">
@@ -1320,17 +1639,17 @@ const handleSubmit = async (e) => {
         </motion.div>
 
         <div className="flex flex-col items-center gap-12">
-          {/* Form */}
+          {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 80 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="relative w-full max-w-2xl mx-auto order-1"
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 blur-xl opacity-30 rounded-3xl"></div>
-            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10">
-              <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
+            <div className="relative bg-white border border-gray-100 shadow-xl rounded-3xl p-6 sm:p-8 md:p-10">
+              <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center text-gray-900">
                 Send Message
               </h3>
 
@@ -1341,18 +1660,18 @@ const handleSubmit = async (e) => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Your Name"
+                    placeholder="Your Name *"
                     required
-                    className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+                    className="w-full bg-[#f7fbff] text-black border border-gray-200 rounded-xl p-4 outline-none focus:border-cyan-500 transition"
                   />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="Email Address"
+                    placeholder="Email Address *"
                     required
-                    className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+                    className="w-full bg-[#f7fbff] text-black border border-gray-200 rounded-xl p-4 outline-none focus:border-cyan-500 transition"
                   />
                 </div>
 
@@ -1362,63 +1681,71 @@ const handleSubmit = async (e) => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="Phone Number"
-                    className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+                    placeholder="Phone Number *"
+                    required
+                    className="w-full bg-[#f7fbff] text-black border border-gray-200 rounded-xl p-4 outline-none focus:border-cyan-500 transition"
                   />
                   <input
                     type="text"
                     name="projectType"
                     value={formData.projectType}
                     onChange={handleChange}
-                    placeholder="Project Type"
-                    className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+                    placeholder="Project Type (e.g. Website, SEO)"
+                    className="w-full bg-[#f7fbff] text-black border border-gray-200 rounded-xl p-4 outline-none focus:border-cyan-500 transition"
                   />
                 </div>
 
                 <textarea
-                  rows="6"
+                  rows="5"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about your project..."
+                  placeholder="Tell us about your project... *"
                   required
-                  className="w-full bg-[#f7fbff] border border-white/10 rounded-xl p-4 outline-none focus:border-cyan-400"
+                  className="w-full bg-[#f7fbff] text-black border border-gray-200 rounded-xl p-4 outline-none focus:border-cyan-500 transition"
                 ></textarea>
 
                 <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: loading ? 1 : 1.02 }}
+                  whileTap={{ scale: loading ? 1 : 0.98 }}
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-4 sm:py-5 rounded-xl font-bold flex justify-center items-center gap-3 hover:shadow-[0_0_40px_rgba(0,255,255,.4)] transition disabled:opacity-60"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 sm:py-5 rounded-xl font-bold flex justify-center items-center gap-3 hover:shadow-lg transition disabled:opacity-70 cursor-pointer"
                 >
-                  {loading ? "Sending..." : "Send Message"}
-                  <Send size={20} />
+                  {loading ? (
+                    <span>Submitting...</span>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <Send size={20} />
+                    </>
+                  )}
                 </motion.button>
 
+                {/* Status Feedback */}
                 {status === "success" && (
-                  <p className="text-green-500 text-center font-medium">
-                    Message sent successfully! We'll get back to you soon.
+                  <p className="text-emerald-600 bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-center font-medium transition">
+                    🎉 Message sent successfully! We will contact you soon.
                   </p>
                 )}
                 {status === "error" && (
-                  <p className="text-red-500 text-center font-medium">
-                    Something went wrong. Please try again.
+                  <p className="text-red-600 bg-red-50 border border-red-200 p-3 rounded-lg text-center font-medium transition">
+                    ❌ Something went wrong. Please try again.
                   </p>
                 )}
               </form>
             </div>
           </motion.div>
 
-          {/* Contact Information */}
+          {/* Contact Cards */}
           <motion.div
-            initial={{ opacity: 0, x: -80 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="w-full order-2"
           >
-            <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-8 text-center text-gray-900">
               Contact Information
             </h3>
 
@@ -1427,21 +1754,21 @@ const handleSubmit = async (e) => {
                 const Icon = item.icon;
                 return (
                   <motion.div
-                    whileHover={{ scale: 1.03, x: 6 }}
+                    whileHover={{ scale: 1.02, x: 4 }}
                     key={i}
                     onClick={() => item.link && window.open(item.link, "_blank")}
-                    className={`group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex items-center gap-5 hover:border-cyan-400 transition ${
+                    className={`group bg-white shadow-sm border border-gray-100 rounded-3xl p-6 flex items-center gap-5 hover:border-cyan-400 transition ${
                       item.link ? "cursor-pointer" : ""
                     }`}
                   >
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center group-hover:bg-cyan-500 group-hover:rotate-12 transition">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-white transition">
                       <Icon size={26} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg sm:text-xl">
+                      <h4 className="font-bold text-lg sm:text-xl text-gray-900">
                         {item.title}
                       </h4>
-                      <p className="text-gray-400 text-sm sm:text-base">
+                      <p className="text-gray-600 text-sm sm:text-base">
                         {item.value}
                       </p>
                     </div>
@@ -1451,7 +1778,7 @@ const handleSubmit = async (e) => {
             </div>
           </motion.div>
 
-          {/* Social Icons */}
+          {/* Social Links */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1461,36 +1788,35 @@ const handleSubmit = async (e) => {
           >
             {[FaFacebookF, FaInstagram, FaLinkedinIn, Globe].map((Icon, i) => (
               <motion.div
-                whileHover={{ y: -8, rotate: 8 }}
+                whileHover={{ y: -6, rotate: 6 }}
                 key={i}
-                className="w-14 h-14 rounded-full bg-white/5 flex justify-center items-center border border-white/10 hover:bg-cyan-500 cursor-pointer transition"
+                className="w-14 h-14 rounded-full bg-white shadow-sm flex justify-center items-center border border-gray-200 text-gray-700 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 cursor-pointer transition"
               >
-                <Icon />
+                <Icon size={20} />
               </motion.div>
             ))}
           </motion.div>
 
-          {/* Bottom CTA */}
+          {/* CTA Banner */}
           <motion.div
-            initial={{ opacity: 0, y: 70 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full order-4 mt-8 md:mt-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[30px] md:rounded-[40px] p-8 md:p-12 flex flex-col lg:flex-row justify-between items-center gap-8"
+            className="w-full order-4 mt-8 md:mt-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[30px] md:rounded-[40px] p-8 md:p-12 flex flex-col lg:flex-row justify-between items-center gap-8 text-white"
           >
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center lg:text-left">
                 Ready To Grow Your Business?
               </h2>
               <p className="text-base md:text-lg mt-4 text-white/90 text-center lg:text-left">
-                AP SOLUTIONS creates high-performing websites, eCommerce
-                stores, and digital marketing solutions that help businesses
-                grow online.
+                AP DIGITAL SOLUTIONS creates high-performing websites, eCommerce stores,
+                and digital marketing solutions that help businesses grow online.
               </p>
             </div>
             <motion.button
               whileHover={{ x: 8 }}
-              className="bg-white text-black px-8 py-4 md:px-10 md:py-5 rounded-full font-bold flex items-center gap-3"
+              className="bg-white text-blue-600 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold flex items-center gap-3 shrink-0 cursor-pointer shadow-md"
             >
               Start Your Project
               <ArrowRight />
