@@ -29,7 +29,7 @@ dotenv.config();
 // Force IPv4
 dns.setDefaultResultOrder("ipv4first");
 
-const contactRoutes = require("./routes/contactRoutes");
+const contactRoutes = require("./routes/contactroutes");
 
 const app = express();
 
