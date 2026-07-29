@@ -1,4 +1,4 @@
-// // const express = require('express');
+// const express = require('express');
 // const cors = require('cors');
 // require('dotenv').config();
 // const mongoose = require('mongoose');
@@ -11,37 +11,50 @@
 //   .then(() => console.log('MongoDB connected'))
 //   .catch((err) => console.log('MongoDB connection error:', err));
 
-// const contactRoutes = require('./routes/contactroutes');
+// const contactRoutes = require('./routes/contactRoutes');
 // app.use('/api', contactRoutes);
 
 // const PORT = process.env.PORT || 5000;
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
-// const express = require('express');
-// const cors = require('cors');
-// require('dotenv').config();
-// const mongoose = require('mongoose');
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const dns = require("dns");
 
-// const app = express();
-//  app.use(cors());
-// // app.use(cors({
-// //   origin: ['http://localhost:5173', 'https://YOUR-ACTUAL-NETLIFY-URL.netlify.app'],
-// //   credentials: true
-// // }));
-// app.use(express.json());
+dotenv.config();
 
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('MongoDB connected'))
-//   .catch((err) => console.log('MongoDB connection error:', err));
+// Force IPv4
+dns.setDefaultResultOrder("ipv4first");
 
-// const contactRoutes = require('./routes/contactroutes');
-// app.use('/api', contactRoutes);
+const contactRoutes = require("./routes/contactRoutes");
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Error:", err));
+
+// Routes
+app.use("/api", contactRoutes);
+
+// Health Check
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
 // const express = require('express');
 // const cors = require('cors');
 // require('dotenv').config();
@@ -73,51 +86,51 @@
 // });
 
 
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const mongoose = require('mongoose');
+// const express = require('express');
+// const cors = require('cors');
+// require('dotenv').config();
+// const mongoose = require('mongoose');
 
-const app = express();
+// const app = express();
 
-// CORS setup
-// NOTE: origin '*' + credentials:true is invalid together (browser rejects it).
-// Use one of the two options below depending on your need:
+// // CORS setup
+// // NOTE: origin '*' + credentials:true is invalid together (browser rejects it).
+// // Use one of the two options below depending on your need:
 
-// Option A — testing / no cookies-auth needed (simplest, matches your logs)
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
-// Option B — production with specific frontend + credentials (cookies/auth headers)
-// Uncomment this and remove Option A once you have your real Netlify URL:
+// // Option A — testing / no cookies-auth needed (simplest, matches your logs)
 // app.use(cors({
-//   origin: ['http://localhost:5173', 'https://YOUR-ACTUAL-NETLIFY-URL.netlify.app'],
-//   credentials: true,
+//   origin: '*',
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
 // }));
 
-app.use(express.json({ limit: '10mb' }));
+// // Option B — production with specific frontend + credentials (cookies/auth headers)
+// // Uncomment this and remove Option A once you have your real Netlify URL:
+// // app.use(cors({
+// //   origin: ['http://localhost:5173', 'https://YOUR-ACTUAL-NETLIFY-URL.netlify.app'],
+// //   credentials: true,
+// // }));
 
-// ✅ Root route — UptimeRobot isi ko ping karta hai
-// Isse "404" status hatega, server "Up" dikhega aur warm rahega
-app.get('/', (req, res) => {
-  res.status(200).send('Server is running ✅');
-});
+// app.use(express.json({ limit: '10mb' }));
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB Connected'))
-  .catch((err) => console.error('❌ MongoDB Error:', err));
+// // ✅ Root route — UptimeRobot isi ko ping karta hai
+// // Isse "404" status hatega, server "Up" dikhega aur warm rahega
+// app.get('/', (req, res) => {
+//   res.status(200).send('Server is running ✅');
+// });
 
-const contactRoutes = require('./routes/contactroutes');
-app.use('/api', contactRoutes);
+// mongoose.connect(process.env.MONGO_URI)
+//   .then(() => console.log('✅ MongoDB Connected'))
+//   .catch((err) => console.error('❌ MongoDB Error:', err));
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log('✅ CORS configured');
-});
+// const contactRoutes = require('./routes/contactroutes');
+// app.use('/api', contactRoutes);
+
+// const PORT = process.env.PORT || 10000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+//   console.log('✅ CORS configured');
+// });
 
 
 // // const express = require('express');
@@ -267,4 +280,48 @@ app.listen(PORT, () => {
 
 // app.listen(PORT, () => {
 //   console.log(`🚀 Server Running On Port ${PORT}`);
+// });
+
+
+// const express = require('express');
+// const cors = require('cors');
+// require('dotenv').config();
+// const mongoose = require('mongoose');
+
+// const app = express();
+
+// // 🔑 IMPORTANT: Render/Railway jaisi hosting proxy ke peeche chalti hai.
+// // Isके bina rate-limit aur real client-IP detect nahi ho payega (sab requests same IP se aati dikhengi)
+// app.set('trust proxy', 1);
+
+// // CORS setup
+// app.use(cors({
+//   origin: '*',
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+// // Body size limit — contact form ke liye 10mb bahut zyada hai, 100kb kaafi hai
+// // Chhota limit = fast parsing + spam/abuse se protection
+// app.use(express.json({ limit: '100kb' }));
+
+// // ✅ Root route — UptimeRobot isi ko ping karta hai
+// app.get('/', (req, res) => {
+//   res.status(200).send('Server is running ✅');
+// });
+
+// // MongoDB connect — connection pool set kiya taaki concurrent requests fast handle ho
+// mongoose.connect(process.env.MONGO_URI, {
+//   maxPoolSize: 10,
+// })
+//   .then(() => console.log('✅ MongoDB Connected'))
+//   .catch((err) => console.error('❌ MongoDB Error:', err));
+
+// const contactRoutes = require('./routes/contactRoutes');
+// app.use('/api', contactRoutes);
+
+// const PORT = process.env.PORT || 10000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+//   console.log('✅ CORS configured');
 // });
