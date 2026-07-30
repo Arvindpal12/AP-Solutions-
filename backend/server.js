@@ -18,43 +18,43 @@
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const dns = require("dns");
+// const express = require("express");
+// const cors = require("cors");
+// const dotenv = require("dotenv");
+// const mongoose = require("mongoose");
+// const dns = require("dns");
 
-dotenv.config();
+// dotenv.config();
 
-// Force IPv4
-dns.setDefaultResultOrder("ipv4first");
+// // Force IPv4
+// dns.setDefaultResultOrder("ipv4first");
 
-const contactRoutes = require("./routes/contactroutes");
+// const contactRoutes = require("./routes/contactroutes");
 
-const app = express();
+// const app = express();
 
-app.use(cors());
-app.use(express.json());
+// app.use(cors());
+// app.use(express.json());
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+// // MongoDB Connection
+// mongoose
+//   .connect(process.env.MONGO_URI)
+//   .then(() => console.log("✅ MongoDB Connected"))
+//   .catch((err) => console.error("❌ MongoDB Error:", err));
 
-// Routes
-app.use("/api", contactRoutes);
+// // Routes
+// app.use("/api", contactRoutes);
 
-// Health Check
-app.get("/", (req, res) => {
-  res.send("Server is running...");
-});
+// // Health Check
+// app.get("/", (req, res) => {
+//   res.send("Server is running...");
+// });
 
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`✅ Server running on port ${PORT}`);
+// });
 // const express = require('express');
 // const cors = require('cors');
 // require('dotenv').config();
@@ -325,3 +325,49 @@ app.listen(PORT, () => {
 //   console.log(`🚀 Server running on port ${PORT}`);
 //   console.log('✅ CORS configured');
 // });
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const dns = require("dns");
+
+dotenv.config();
+dns.setDefaultResultOrder("ipv4first");
+
+const contactRoutes = require("./routes/contactroutes");
+
+const app = express();
+
+// CORS
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://your-netlify-site.netlify.app", // <-- apni Netlify URL yaha daalna
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.log("❌ MongoDB Error:", err));
+
+// Routes
+app.use("/api", contactRoutes);
+
+app.get("/", (req, res) => {
+  res.send("🚀 AP Solutions Backend Running");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running on ${PORT}`);
+});

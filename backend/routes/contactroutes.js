@@ -13,107 +13,97 @@
 // });
 
 // module.exports = router;
-const express = require("express");
-const router = express.Router();
-const Contact = require("../module/Contact");
-const nodemailer = require("nodemailer");
-const dns = require("dns");
+// const express = require("express");
+// const router = express.Router();
+// const Contact = require("../module/Contact");
+// const nodemailer = require("nodemailer");
 
-dns.setDefaultResultOrder("ipv4first");
+// // Gmail Transport
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS, // Google App Password
+//   },
+// });
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  tls: {
-    servername: "smtp.gmail.com",
-    rejectUnauthorized: false,
-  },
-});
+// // SMTP Verify
+// transporter.verify((err) => {
+//   if (err) {
+//     console.error("❌ SMTP Verify Error:", err.message);
+//   } else {
+//     console.log("✅ Gmail SMTP Connected");
+//   }
+// });
 
-// SMTP Verify
-transporter.verify((err) => {
-  if (err) {
-    console.error("❌ SMTP Verify Error:", err);
-  } else {
-    console.log("✅ SMTP Connected Successfully");
-  }
-});
+// router.post("/Contact", async (req, res) => {
+//   try {
+//     const { name, email, message } = req.body;
 
-router.post("/Contact", async (req, res) => {
-  try {
-    const { name, email, message } = req.body;
+//     // Save in MongoDB
+//     const newContact = new Contact({ name, email, message });
+//     await newContact.save();
 
-    // Save to MongoDB
-    const newContact = new Contact({ name, email, message });
-    await newContact.save();
+//     // Response immediately
+//     res.status(201).json({
+//       success: true,
+//       message: "Message submitted successfully!",
+//     });
 
-    // Send response immediately
-    res.status(201).json({
-      success: true,
-      message: "Message saved successfully",
-    });
+//     // User Email
+//     transporter.sendMail({
+//       from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
+//       to: email,
+//       subject: "Thank You for Contacting AP Solutions",
+//       html: `
+//         <h2>Hello ${name},</h2>
+//         <p>Thank you for contacting <b>AP Solutions</b>.</p>
+//         <p>We have received your message and will contact you soon.</p>
 
-    // User Email
-    transporter
-      .sendMail({
-        from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: "Thank You for Contacting Us!",
-        html: `
-          <h3>Hi ${name},</h3>
-          <p>Thank you for contacting <b>AP Solutions</b>.</p>
-          <p>We have received your message and will contact you soon.</p>
+//         <hr>
 
-          <hr>
+//         <h3>Your Message</h3>
+//         <p>${message}</p>
 
-          <p><strong>Your Message:</strong></p>
-          <p>${message}</p>
+//         <br>
 
-          <br>
+//         <p>Regards,<br>AP Solutions Team</p>
+//       `,
+//     }).then(() => {
+//       console.log("✅ User email sent");
+//     }).catch((err) => {
+//       console.error("❌ User mail failed:", err.message);
+//     });
 
-          <p>Regards,<br>AP Solutions Team</p>
-        `,
-      })
-      .then(() => console.log("✅ User mail sent"))
-      .catch((err) => console.error("❌ User mail failed:", err));
+//     // Admin Email
+//     transporter.sendMail({
+//       from: `"Website Contact Form" <${process.env.EMAIL_USER}>`,
+//       to: process.env.EMAIL_USER,
+//       subject: "New Contact Form Submission",
+//       html: `
+//         <h2>New Contact Form Submission</h2>
 
-    // Admin Email
-    transporter
-      .sendMail({
-        from: `"Website Contact Form" <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
-        subject: "New Contact Form Submission",
-        html: `
-          <h2>New Contact Form Submission</h2>
+//         <p><b>Name:</b> ${name}</p>
+//         <p><b>Email:</b> ${email}</p>
+//         <p><b>Message:</b></p>
+//         <p>${message}</p>
+//       `,
+//     }).then(() => {
+//       console.log("✅ Admin email sent");
+//     }).catch((err) => {
+//       console.error("❌ Admin mail failed:", err.message);
+//     });
 
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
+//   } catch (err) {
+//     console.error("❌ Save failed:", err);
+//     res.status(500).json({
+//       success: false,
+//       error: err.message,
+//     });
+//   }
+// });
 
-          <p>${message}</p>
-        `,
-      })
-      .then(() => console.log("✅ Admin mail sent"))
-      .catch((err) => console.error("❌ Admin mail failed:", err));
-  } catch (err) {
-    console.error("❌ Save failed:", err);
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
-});
-
-module.exports = router;
+// module.exports = router;
 
 // ++++++++++++++++using resend for sending emails .
 
@@ -660,3 +650,75 @@ module.exports = router;
 // });
 
 // module.exports = router;
+const express = require("express");
+const router = express.Router();
+const { Resend } = require("resend");
+const Contact = require("../module/Contact");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+router.post("/Contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    // Save to MongoDB
+    const newContact = new Contact({
+      name,
+      email,
+      message,
+    });
+
+    await newContact.save();
+
+    // Emails
+    const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+    const adminEmail = process.env.ADMIN_EMAIL;
+
+    // Mail to User
+    await resend.emails.send({
+      from: `AP Solutions <${fromEmail}>`,
+      to: email,
+      subject: "Thank You for Contacting AP Solutions",
+      html: `
+      <h2>Hello ${name}</h2>
+      <p>Thank you for contacting AP Solutions.</p>
+      <p>We have received your message.</p>
+      `,
+    });
+
+    // Mail to Admin
+    await resend.emails.send({
+      from: `AP Solutions <${fromEmail}>`,
+      to: adminEmail,
+      subject: "New Contact Form",
+      html: `
+      <h2>New Contact Form</h2>
+
+      <p><b>Name:</b> ${name}</p>
+      <p><b>Email:</b> ${email}</p>
+      <p><b>Message:</b> ${message}</p>
+      `,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Message sent successfully",
+    });
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+module.exports = router;
