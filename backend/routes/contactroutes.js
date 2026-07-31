@@ -726,17 +726,15 @@
 // using noidemailer
 const express = require("express");
 const router = express.Router();
-const nodemailer = require("nodemailer");
+const brevo = require("@getbrevo/brevo");
 const Contact = require("../module/Contact");
 
-// Nodemailer Transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// Brevo API Instance
+let apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 router.post("/Contact", async (req, res) => {
   try {
@@ -754,45 +752,52 @@ router.post("/Contact", async (req, res) => {
     await newContact.save();
 
     const adminEmail = process.env.ADMIN_EMAIL;
+    const senderEmail = process.env.EMAIL_USER; // Brevo pe verified/signup wala email
 
-    // ✅ User ko Thank You email
-    await transporter.sendMail({
-      from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Thank You for Contacting AP Solutions",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-          <h2 style="color: #4A90E2;">Hello ${name}! 👋</h2>
-          <p>Thank you for reaching out to <strong>AP Solutions</strong>.</p>
-          <p>We have received your message and our team will get back to you shortly.</p>
-          <br/>
-          <p style="color: #888; font-size: 13px;">— Team AP Solutions</p>
-        </div>
-      `,
-    });
+    // Email bhejne ki koshish (fail hone pe bhi response success jayega)
+    try {
+      // ✅ User ko Thank You email
+      await apiInstance.sendTransacEmail({
+        sender: { name: "AP Solutions", email: senderEmail },
+        to: [{ email: email, name: name }],
+        subject: "Thank You for Contacting AP Solutions",
+        htmlContent: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h2 style="color: #4A90E2;">Hello ${name}! 👋</h2>
+            <p>Thank you for reaching out to <strong>AP Solutions</strong>.</p>
+            <p>We have received your message and our team will get back to you shortly.</p>
+            <br/>
+            <p style="color: #888; font-size: 13px;">— Team AP Solutions</p>
+          </div>
+        `,
+      });
 
-    // ✅ Admin ko form data email
-    await transporter.sendMail({
-      from: `"AP Solutions Form" <${process.env.EMAIL_USER}>`,
-      to: adminEmail,
-      subject: "📩 New Contact Form Submission",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-          <h2 style="color: #4A90E2;">New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-          <p><strong>Message:</strong> ${message}</p>
-        </div>
-      `,
-    });
+      // ✅ Admin ko form data email
+      await apiInstance.sendTransacEmail({
+        sender: { name: "AP Solutions Form", email: senderEmail },
+        to: [{ email: adminEmail }],
+        subject: "📩 New Contact Form Submission",
+        htmlContent: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h2 style="color: #4A90E2;">New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
+            <p><strong>Message:</strong> ${message}</p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error("Email Error:", emailErr.message);
+      // Email fail hone pe bhi aage badho (data already save ho chuka hai)
+    }
 
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
     });
   } catch (err) {
-    console.error("Email Error:", err);
+    console.error("Contact Error:", err);
     return res.status(500).json({
       success: false,
       message: err.message,
