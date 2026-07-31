@@ -726,15 +726,10 @@
 // using noidemailer
 const express = require("express");
 const router = express.Router();
-const brevo = require("@getbrevo/brevo");
+const axios = require("axios");
 const Contact = require("../module/Contact");
 
-// Brevo API Instance
-let apiInstance = new brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
 router.post("/Contact", async (req, res) => {
   try {
@@ -752,44 +747,57 @@ router.post("/Contact", async (req, res) => {
     await newContact.save();
 
     const adminEmail = process.env.ADMIN_EMAIL;
-    const senderEmail = process.env.EMAIL_USER; // Brevo pe verified/signup wala email
+    const senderEmail = process.env.EMAIL_USER;
 
-    // Email bhejne ki koshish (fail hone pe bhi response success jayega)
+    const headers = {
+      "api-key": process.env.BREVO_API_KEY,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
     try {
-      // ✅ User ko Thank You email
-      await apiInstance.sendTransacEmail({
-        sender: { name: "AP Solutions", email: senderEmail },
-        to: [{ email: email, name: name }],
-        subject: "Thank You for Contacting AP Solutions",
-        htmlContent: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-            <h2 style="color: #4A90E2;">Hello ${name}! 👋</h2>
-            <p>Thank you for reaching out to <strong>AP Solutions</strong>.</p>
-            <p>We have received your message and our team will get back to you shortly.</p>
-            <br/>
-            <p style="color: #888; font-size: 13px;">— Team AP Solutions</p>
-          </div>
-        `,
-      });
-
-      // ✅ Admin ko form data email
-      await apiInstance.sendTransacEmail({
-        sender: { name: "AP Solutions Form", email: senderEmail },
-        to: [{ email: adminEmail }],
-        subject: "📩 New Contact Form Submission",
-        htmlContent: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-            <h2 style="color: #4A90E2;">New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-            <p><strong>Message:</strong> ${message}</p>
-          </div>
-        `,
-      });
+      await Promise.all([
+        // User ko Thank You email
+        axios.post(
+          BREVO_API_URL,
+          {
+            sender: { name: "AP Solutions", email: senderEmail },
+            to: [{ email: email, name: name }],
+            subject: "Thank You for Contacting AP Solutions",
+            htmlContent: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #4A90E2;">Hello ${name}! 👋</h2>
+                <p>Thank you for reaching out to <strong>AP Solutions</strong>.</p>
+                <p>We have received your message and our team will get back to you shortly.</p>
+                <br/>
+                <p style="color: #888; font-size: 13px;">— Team AP Solutions</p>
+              </div>
+            `,
+          },
+          { headers }
+        ),
+        // Admin ko form data email
+        axios.post(
+          BREVO_API_URL,
+          {
+            sender: { name: "AP Solutions Form", email: senderEmail },
+            to: [{ email: adminEmail }],
+            subject: "📩 New Contact Form Submission",
+            htmlContent: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #4A90E2;">New Contact Form Submission</h2>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
+                <p><strong>Message:</strong> ${message}</p>
+              </div>
+            `,
+          },
+          { headers }
+        ),
+      ]);
     } catch (emailErr) {
-      console.error("Email Error:", emailErr.message);
-      // Email fail hone pe bhi aage badho (data already save ho chuka hai)
+      console.error("Email Error:", emailErr.response?.data || emailErr.message);
     }
 
     return res.status(201).json({
