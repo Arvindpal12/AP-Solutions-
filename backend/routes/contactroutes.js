@@ -650,16 +650,97 @@
 // });
 
 // module.exports = router;
+// const express = require("express");
+// const router = express.Router();
+// const { Resend } = require("resend");
+// const Contact = require("../module/Contact");
+
+// const resend = new Resend(process.env.RESEND_API_KEY);
+
+// router.post("/Contact", async (req, res) => {
+//   try {
+//     const { name, email, message } = req.body;
+
+//     if (!name || !email || !message) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "All fields are required",
+//       });
+//     }
+
+//     // Save to MongoDB
+//     const newContact = new Contact({
+//       name,
+//       email,
+//       message,
+//     });
+
+//     await newContact.save();
+
+//     // Emails
+//     const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+//     const adminEmail = process.env.ADMIN_EMAIL;
+
+//     // Mail to User
+//     await resend.emails.send({
+//       from: `AP Solutions <${fromEmail}>`,
+//       to: email,
+//       subject: "Thank You for Contacting AP Solutions",
+//       html: `
+//       <h2>Hello ${name}</h2>
+//       <p>Thank you for contacting AP Solutions.</p>
+//       <p>We have received your message.</p>
+//       `,
+//     });
+
+//     // Mail to Admin
+//     await resend.emails.send({
+//       from: `AP Solutions <${fromEmail}>`,
+//       to: adminEmail,
+//       subject: "New Contact Form",
+//       html: `
+//       <h2>New Contact Form</h2>
+
+//       <p><b>Name:</b> ${name}</p>
+//       <p><b>Email:</b> ${email}</p>
+//       <p><b>Message:</b> ${message}</p>
+//       `,
+//     });
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Message sent successfully",
+//     });
+//   } catch (err) {
+//     console.error(err);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// });
+
+// module.exports = router;
+
+// using noidemailer
 const express = require("express");
 const router = express.Router();
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 const Contact = require("../module/Contact");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Nodemailer Transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 router.post("/Contact", async (req, res) => {
   try {
-    const { name, email, message } = req.body;
+    const { name, email, phone, message } = req.body;
 
     if (!name || !email || !message) {
       return res.status(400).json({
@@ -668,42 +749,41 @@ router.post("/Contact", async (req, res) => {
       });
     }
 
-    // Save to MongoDB
-    const newContact = new Contact({
-      name,
-      email,
-      message,
-    });
-
+    // MongoDB me save karo
+    const newContact = new Contact({ name, email, phone, message });
     await newContact.save();
 
-    // Emails
-    const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
     const adminEmail = process.env.ADMIN_EMAIL;
 
-    // Mail to User
-    await resend.emails.send({
-      from: `AP Solutions <${fromEmail}>`,
+    // ✅ User ko Thank You email
+    await transporter.sendMail({
+      from: `"AP Solutions" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Thank You for Contacting AP Solutions",
       html: `
-      <h2>Hello ${name}</h2>
-      <p>Thank you for contacting AP Solutions.</p>
-      <p>We have received your message.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+          <h2 style="color: #4A90E2;">Hello ${name}! 👋</h2>
+          <p>Thank you for reaching out to <strong>AP Solutions</strong>.</p>
+          <p>We have received your message and our team will get back to you shortly.</p>
+          <br/>
+          <p style="color: #888; font-size: 13px;">— Team AP Solutions</p>
+        </div>
       `,
     });
 
-    // Mail to Admin
-    await resend.emails.send({
-      from: `AP Solutions <${fromEmail}>`,
+    // ✅ Admin ko form data email
+    await transporter.sendMail({
+      from: `"AP Solutions Form" <${process.env.EMAIL_USER}>`,
       to: adminEmail,
-      subject: "New Contact Form",
+      subject: "📩 New Contact Form Submission",
       html: `
-      <h2>New Contact Form</h2>
-
-      <p><b>Name:</b> ${name}</p>
-      <p><b>Email:</b> ${email}</p>
-      <p><b>Message:</b> ${message}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+          <h2 style="color: #4A90E2;">New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
+          <p><strong>Message:</strong> ${message}</p>
+        </div>
       `,
     });
 
@@ -712,8 +792,7 @@ router.post("/Contact", async (req, res) => {
       message: "Message sent successfully",
     });
   } catch (err) {
-    console.error(err);
-
+    console.error("Email Error:", err);
     return res.status(500).json({
       success: false,
       message: err.message,
