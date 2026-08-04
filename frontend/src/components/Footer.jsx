@@ -203,11 +203,11 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaFacebookF />, url: "#" },
-    { icon: <FaInstagram />, url: "#" },
-    { icon: <FaLinkedinIn />, url: "#" },
-    { icon: <FaGithub />, url: "#" },
-    { icon: <FaXTwitter />, url: "#" },
+    { icon: <FaFacebookF />, url: "https://www.facebook.com/share/1JeKmiQbRX/" },
+    { icon: <FaInstagram />, url: "https://www.instagram.com/apdigitalsolutions6?igsh=MTN3cWx1bGF1ZGtkbQ==" },
+    { icon: <FaLinkedinIn />, url: "https://www.linkedin.com/in/arvind-pal-70b4b4300?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
+    { icon: <FaGithub />, url: "https://github.com/Arvindpal12" },
+    { icon: <FaXTwitter />, url: "https://x.com/ArvindPal696706" },
   ];
 
   return (

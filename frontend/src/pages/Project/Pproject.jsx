@@ -247,29 +247,29 @@ const customProjects = [
   {
     id: "CODE-01",
     icon: LayoutDashboard,
-    title: "FinTech Analytics Dashboard",
+    title: "Personal Portfolio Website",
     description:
-      "A real-time data dashboard for a fintech client — custom charting engine, role-based access, and sub-200ms query response.",
+      "A modern, responsive portfolio website built with React.js, Tailwind CSS, and Framer Motion to showcase my skills, projects, services, and contact information with smooth animations and a clean user experience.",
     tags: ["React", "Node.js", "PostgreSQL"],
-    url: "https://example.com/projects/fintech-dashboard",
+    url: "https://arvind-portfolio2.netlify.app",
   },
   {
     id: "CODE-02",
     icon: Code2,
-    title: "SaaS Booking Platform",
+    title: "Govt Scheme website ",
     description:
-      "Multi-tenant scheduling SaaS built from the ground up — Stripe billing, calendar sync, and a public API for partners.",
+      "A responsive website for browsing government tenders and schemes with categorized listings, search functionality, and a simple, user-friendly interface.",
     tags: ["Next.js", "Stripe", "PostgreSQL"],
-    url: "https://example.com/projects/saas-booking-platform",
+    url: "https://ritikjha-portfolio.netlify.app",
   },
   {
     id: "CODE-03",
     icon: Building2,
-    title: "Real Estate Marketplace",
+    title: "Supabase Platform Website",
     description:
-      "A high-traffic property marketplace with map-based search, saved listings, and an agent CRM built into the same codebase.",
+      "A developer-focused web application interface built using modern frontend technologies with responsive layouts, interactive components, and optimized performance.",
     tags: ["React", "Node.js", "Mapbox"],
-    url: "https://example.com/projects/real-estate-marketplace",
+    url: "https://supabase.com",
   },
 ];
 
@@ -277,29 +277,29 @@ const wordpressProjects = [
   {
     id: "WP-01",
     icon: Globe,
-    title: "Corporate Site Redesign",
+    title: "Sony Music Corporate Website",
     description:
-      "A full brand-to-web overhaul for a professional services firm — editable by their marketing team, no developer required.",
+      "A professional WordPress corporate website featuring artist profiles, news updates, multimedia content, responsive layouts, and SEO-friendly architecture.",
     tags: ["WordPress", "Elementor", "ACF"],
-    url: "https://example.com/projects/corporate-redesign",
+    url: "https://www.sonymusic.com",
   },
   {
     id: "WP-02",
     icon: UtensilsCrossed,
-    title: "Restaurant Booking Site",
+    title: "Obama Foundation Website",
     description:
-      "A reservations-first restaurant site with live table availability, menu management, and location-based landing pages.",
+      "A modern WordPress nonprofit website designed with clean layouts, event management, donation sections, blog integration, and responsive design.",
     tags: ["WordPress", "WooCommerce", "Custom Plugin"],
-    url: "https://example.com/projects/restaurant-booking",
+    url: "https://www.obama.org",
   },
   {
     id: "WP-03",
     icon: HeartHandshake,
-    title: "Nonprofit Donation Portal",
+    title: "TechCrunch News Portal",
     description:
-      "A donation-driven nonprofit site with recurring giving, campaign pages, and full accessibility compliance.",
+      "A WordPress-powered technology news website with categorized articles, search functionality, responsive layouts, and optimized content management..",
     tags: ["WordPress", "Give", "Accessibility"],
-    url: "https://example.com/projects/nonprofit-portal",
+    url: "https://techcrunch.com",
   },
 ];
 
@@ -307,29 +307,29 @@ const shopifyProjects = [
   {
     id: "SHOP-01",
     icon: Shirt,
-    title: "Fashion Boutique Store",
+    title: "MVMT Fashion Accessories Store",
     description:
-      "A conversion-focused fashion storefront with a custom filtering system, lookbook sections, and a sub-2s load time.",
+      "A premium Shopify eCommerce store showcasing watches, jewelry, and accessories with a modern design, responsive layout, secure checkout, and a smooth shopping experience.",
     tags: ["Shopify", "Liquid", "Custom Theme"],
-    url: "https://example.com/projects/fashion-boutique",
+    url: "https://colourpop.com",
   },
   {
     id: "SHOP-02",
     icon: Cpu,
-    title: "Electronics & Gadgets Store",
+    title: "ColourPop Beauty Store",
     description:
-      "A spec-heavy electronics store with comparison tables, dynamic bundles, and integrated review syndication.",
+      "A Shopify beauty and cosmetics eCommerce website with product categories, promotional banners, customer reviews, mobile-first design, and an engaging shopping experience.",
     tags: ["Shopify", "Apps", "Metafields"],
-    url: "https://example.com/projects/electronics-store",
+    url: "https://colourpop.com",
   },
   {
     id: "SHOP-03",
     icon: PackageOpen,
-    title: "Subscription Box Store",
+    title: "Allbirds Footwear Store",
     description:
-      "A recurring-revenue subscription store with plan management, skip/swap flows, and a frictionless one-click checkout.",
+      "A clean and minimal Shopify footwear store showcasing eco-friendly products, intuitive navigation, product filtering, and a fast, user-friendly shopping experience.",
     tags: ["Shopify", "Subscriptions", "Checkout Extensibility"],
-    url: "https://example.com/projects/subscription-box",
+    url: "https://allbirds.com",
   },
 ];
 
