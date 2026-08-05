@@ -195,11 +195,11 @@ const Footer = () => {
   ];
 
   const services = [
-    { name: "Website Development", path: "/services/website-development" },
-    { name: "WordPress Development", path: "/services/wordpress-development" },
-    { name: "Shopify Development", path: "/services/shopify-development" },
-    { name: "UI/UX Design", path: "/services/ui-ux-design" },
-    { name: "SEO & Marketing", path: "/services/seo-marketing" },
+    { name: "Website Development", path: "/pages/services" },
+    { name: "WordPress Development", path: "/pages/services" },
+    { name: "Shopify Development", path: "/pages/services" },
+    { name: "UI/UX Design", path: "/pages/services" },
+    { name: "SEO & Marketing", path: "/pages/services" },
   ];
 
   const socialLinks = [
