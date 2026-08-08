@@ -1865,9 +1865,9 @@ function MissionVisionValues() {
         .animate-flow {
           animation: dashflow 3.5s linear infinite;
         }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-flow { animation: none; }
-        }
+        // @media (prefers-reduced-motion: reduce) {
+        //   .animate-flow { animation: none; }
+        // }
       `}</style>
     </section>
   );
