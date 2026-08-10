@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaTimes } from "react-icons/fa";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
+import logo1 from "../assets/logo1.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] lg:w-[85%] xl:w-[75%] z-50">
+      <nav className="fixed top-6 pb-20 left-1/2 -translate-x-1/2 w-[95%] lg:w-[85%] xl:w-[75%] z-50">
 
         <div className="bg-black rounded-full px-6 py-4 shadow-2xl flex items-center justify-between">
 
@@ -32,7 +33,7 @@ export default function Navbar() {
           >
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden">
               <img
-                src={logo}
+                src={logo1}
                 alt="AP Solutions"
                 className="w-10 h-10 object-contain"
               />
