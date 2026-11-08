@@ -1271,17 +1271,18 @@ function Contactus() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-10">
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-16 md:mb-20"
+          className="text-center sm:mt-5 md:mb-20"   
         >
-          <span className="inline-block px-5 py-2 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30">
+          <span className="inline-block px-5 py-5 rounded-full bg-cyan-500/20 text-black-400 border border-cyan-500/30">
             CONTACT AP SOLUTIONS
           </span>
+          
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mt-8">
             Let's Build Something Amazing
           </h2>
